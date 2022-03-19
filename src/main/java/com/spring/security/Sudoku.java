@@ -1,5 +1,8 @@
 package com.spring.security;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +20,7 @@ public class Sudoku {
 
 		fillDiagonal();
 		fillRemaining(0, SRN);
-		removeKDigits();
+		
 	}
 
 	void fillDiagonal() {
@@ -124,12 +127,12 @@ public class Sudoku {
 	}
 
 	@GetMapping("/generate-sudoku")
-	public int[][] generate() {
+	public List<int[][]> generate() {
 //		System.out.println("controller called");
 		int N = 9, K = 30;
 		this.N = N;
 		this.K = K;
-
+		List<int[][]> mats = new ArrayList<>();
 		// Compute square root of N
 		Double SRNd = Math.sqrt(N);
 		SRN = SRNd.intValue();
@@ -137,8 +140,15 @@ public class Sudoku {
 		mat = new int[N][N];
 
 		fillValues();
+		int[][] tempmat = new int[N][N];
+		for(int i=0; i<N; i++)
+			for(int j=0; j<N; j++)
+				tempmat[i][j] = mat[i][j];
+		mats.add(tempmat);
+		removeKDigits();
+		mats.add(mat);
+		
 //		System.out.println(mat.toString());
-		return mat;
+		return mats;
 	}
-
 }
